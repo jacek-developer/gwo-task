@@ -107,6 +107,19 @@ final class Cart
     }
 
     /**
+     * @return float
+     */
+    public function getTotalPriceGross(): float
+    {
+        $totalPrice = 0.00;
+        /** @var $item Item */
+        foreach ($this->items as $item) {
+            $totalPrice += $item->getTotalGrossPrice();
+        }
+        return round($totalPrice, 2);
+    }
+
+    /**
      * @param int $orderId
      * @return Order
      */

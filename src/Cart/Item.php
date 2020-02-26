@@ -21,6 +21,11 @@ final class Item
     private $quantity;
 
     /**
+     * @var int
+     */
+    private static $priceDecimalPrecision = 2;
+
+    /**
      * Item constructor.
      * @param Product $product
      * @param int $quantity
@@ -55,6 +60,14 @@ final class Item
      */
     public function getTotalPrice(): int {
         return (int) round($this->quantity * $this->product->getUnitPrice(), 0);
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalGrossPrice(): float
+    {
+        return round($this->quantity * $this->product->getUnitGrossPrice(), 2);
     }
 
     /**

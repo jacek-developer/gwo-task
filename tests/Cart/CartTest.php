@@ -128,10 +128,29 @@ class CartTest extends TestCase
         $this->assertCount(0, $cart->getItems());
         $this->assertEquals(0, $cart->getTotalPrice());
         $this->assertInstanceOf(Order::class, $order);
-        $this->assertEquals(['id' => 7, 'items' => [
-            ['id' => 1, 'quantity' => 1, 'total_price' => 15000],
-            ['id' => 2, 'quantity' => 2, 'total_price' => 20000],
-        ], 'total_price' => 35000], $order->getDataForView());
+        $this->assertEquals([
+            'id' => 7,
+            'items' => [
+                ['id' => 1, 'quantity' => 1, 'total_price' => 15000, 'total_price_gross' => 15000.0, 'tax' => '0%'],
+                ['id' => 2, 'quantity' => 2, 'total_price' => 20000, 'total_price_gross' => 20000.0, 'tax' => '0%'],
+            ],
+            'total_price' => 35000,
+            'total_price_gross' => 35000.0
+        ], $order->getDataForView());
+    }
+
+    /**
+     * @test
+     */
+    public function itPriceGrossValid(): void
+    {
+        $product = $this->buildTestProduct(1, 10);
+        $product->setTax(23);
+
+        $cart = new Cart();
+        $cart->setQuantity($product, 2);
+        $this->assertEquals(12.30, $cart->getItem(0)->getProduct()->getUnitGrossPrice());
+        $this->assertEquals(24.60, $cart->getTotalPriceGross());
     }
 
     public function getNonExistentItemIndexes(): array
